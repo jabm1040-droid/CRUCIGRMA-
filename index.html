@@ -64,7 +64,219 @@ function key(r,c){return r+'-'+c}
 words.forEach(w=>{for(let i=0;i<w.word.length;i++){let r=w.row+(w.dir==='V'?i:0),c=w.col+(w.dir==='H'?i:0);cells[key(r,c)]={letter:w.word[i],nums:cells[key(r,c)]?.nums||[]};if(!cells[key(r,c)].nums.includes(w.num))cells[key(r,c)].nums.push(w.num)}});
 const grid=document.getElementById('grid');
 for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){
- const d=document.createElement('div');d.className='cell';const k=key(r,c);
+ const d=document.createElement('div');d.className='cell';const k=key(r,c);<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crucigrama - Procesamiento Profundo</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;padding:20px;font-family:Arial,Helvetica,sans-serif;background:#f3f5f7;color:#222}
+.container{max-width:1000px;margin:auto;background:#fff;padding:24px;border-radius:16px;box-shadow:0 4px 18px rgba(0,0,0,.12)}
+h1{text-align:center;margin-top:0;color:#243447;font-size:clamp(24px,5vw,36px)}
+.intro{line-height:1.6;text-align:center;color:#444}
+.instructions{background:#eef5ff;padding:15px;border-radius:10px;margin:18px 0;line-height:1.55}
+.name-box{margin:18px 0}.name-box label{font-weight:bold;display:block;margin-bottom:7px}
+.name-box input{width:100%;padding:12px;border:1px solid #bbb;border-radius:8px;font-size:16px}
+.crossword-wrap{overflow-x:auto;padding:15px 5px;margin:10px 0}
+.grid{display:grid;grid-template-columns:repeat(8,42px);grid-auto-rows:42px;gap:2px;width:max-content;margin:auto;background:#222;padding:2px;border-radius:6px}
+.cell{width:42px;height:42px;background:#fff;position:relative;border:1px solid #aaa}
+.cell input{width:100%;height:100%;border:0;background:#fff;color:#111;text-align:center;font-size:22px;font-weight:bold;text-transform:uppercase;outline:none;padding:0}
+.cell input:focus{background:#dff0ff;box-shadow:inset 0 0 0 3px #4b9cff}
+.cell.blocked{background:#222;border-color:#222}
+.number{position:absolute;top:1px;left:3px;font-size:11px;color:#555;z-index:2;pointer-events:none;font-weight:bold}
+.cell.correct input{background:#b9f6c5}
+.cell.incorrect input{background:#ffb8b8}
+.section-title{margin-top:25px;color:#243447}
+.clues{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.clue{padding:12px;background:#f7f7f7;border-radius:8px;border-left:4px solid #4b7bec;line-height:1.45}
+.buttons{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:22px 0}
+.buttons button{padding:12px 18px;border:0;border-radius:8px;font-size:16px;font-weight:bold;cursor:pointer}
+.check{background:#287d3c;color:white}.reset{background:#555;color:white}
+#result{text-align:center;font-size:20px;font-weight:bold;min-height:28px}
+@media(max-width:650px){
+ body{padding:10px}.container{padding:15px}.clues{grid-template-columns:1fr}
+ .grid{grid-template-columns:repeat(8,34px);grid-auto-rows:34px}
+ .cell{width:34px;height:34px}.cell input{font-size:19px}
+ .number{font-size:9px}
+}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>🧩 Crucigrama: Procesamiento Profundo</h1>
+<p class="intro">El procesamiento profundo significa comprender, analizar y relacionar la información para lograr un aprendizaje significativo.</p>
+
+<div class="instructions">
+<strong>Instrucciones:</strong><br>
+1. Escribe tu nombre.<br>
+2. Lee las pistas.<br>
+3. Completa el crucigrama escribiendo las respuestas <strong>sin tildes</strong>.<br>
+4. Presiona <strong>Comprobar respuestas</strong> para conocer tu resultado.
+</div>
+
+<div class="name-box">
+<label for="name">Nombre:</label>
+<input id="name" type="text" placeholder="Escribe tu nombre">
+</div>
+
+<h2 class="section-title">Crucigrama</h2>
+<div class="crossword-wrap"><div id="grid" class="grid"></div></div>
+
+<h2 class="section-title">Pistas</h2>
+<div class="clues">
+<div class="clue"><strong>1. ATENCION</strong><br>Capacidad de concentrarse en una información o actividad específica.</div>
+<div class="clue"><strong>2. ANALISIS</strong><br>Proceso de examinar información para comprender sus partes y relaciones.</div>
+<div class="clue"><strong>3. REFLEXION</strong><br>Proceso de pensar cuidadosamente sobre una experiencia o información.</div>
+<div class="clue"><strong>4. APRENDIZAJE</strong><br>Proceso mediante el cual una persona adquiere conocimientos y desarrolla habilidades.</div>
+<div class="clue"><strong>5. MEMORIA</strong><br>Capacidad de almacenar y recuperar información.</div>
+<div class="clue"><strong>6. COMPRENSION</strong><br>Capacidad de entender el significado de una información.</div>
+<div class="clue"><strong>7. CONOCIMIENTO</strong><br>Conjunto de información y saberes adquiridos mediante el estudio o la experiencia.</div>
+</div>
+
+<div class="buttons">
+<button class="check" onclick="checkAnswers()">Comprobar respuestas</button>
+<button class="reset" onclick="resetGame()">Reiniciar</button>
+</div>
+<div id="result"></div>
+</div>
+
+<script>
+const ROWS=21, COLS=8;
+
+/*
+  Distribución corregida:
+  1 ATENCION       horizontal, fila 10
+  2 ANALISIS       vertical, columna 0
+  3 REFLEXION      vertical, columna 2
+  4 APRENDIZAJE    vertical, columna 3
+  5 MEMORIA        vertical, columna 6
+  6 COMPRENSION    vertical, columna 4
+  7 CONOCIMIENTO   vertical, columna 1
+*/
+const words=[
+ {num:1,word:'ATENCION',row:10,col:0,dir:'H'},
+ {num:2,word:'ANALISIS',row:10,col:0,dir:'V'},
+ {num:3,word:'REFLEXION',row:9,col:2,dir:'V'},
+ {num:4,word:'APRENDIZAJE',row:6,col:3,dir:'V'},
+ {num:5,word:'MEMORIA',row:7,col:6,dir:'V'},
+ {num:6,word:'COMPRENSION',row:10,col:4,dir:'V'},
+ {num:7,word:'CONOCIMIENTO',row:0,col:1,dir:'V'}
+];
+
+const cells={};
+function key(r,c){return r+'-'+c}
+
+words.forEach(w=>{
+ for(let i=0;i<w.word.length;i++){
+   const r=w.row+(w.dir==='V'?i:0);
+   const c=w.col+(w.dir==='H'?i:0);
+   if(r<0||r>=ROWS||c<0||c>=COLS) continue;
+   const k=key(r,c);
+   if(!cells[k]) cells[k]={letter:w.word[i],nums:[]};
+   if(cells[k].letter!==w.word[i]){
+     console.error('Cruce incorrecto en',k,w.num);
+   }
+   if(!cells[k].nums.includes(w.num)) cells[k].nums.push(w.num);
+ }
+});
+
+const grid=document.getElementById('grid');
+
+for(let r=0;r<ROWS;r++){
+ for(let c=0;c<COLS;c++){
+   const d=document.createElement('div');
+   d.className='cell';
+   const k=key(r,c);
+
+   if(!cells[k]){
+     d.classList.add('blocked');
+     grid.appendChild(d);
+     continue;
+   }
+
+   // Solo muestra el número de inicio de cada palabra.
+   const startNums=words
+     .filter(w=>w.row===r && w.col===c)
+     .map(w=>w.num);
+
+   if(startNums.length){
+     const n=document.createElement('span');
+     n.className='number';
+     n.textContent=startNums.join('/');
+     d.appendChild(n);
+   }
+
+   const inp=document.createElement('input');
+   inp.maxLength=1;
+   inp.dataset.row=r;
+   inp.dataset.col=c;
+   inp.dataset.answer=cells[k].letter;
+   inp.setAttribute('aria-label','Casilla '+(r+1)+','+(c+1));
+
+   inp.addEventListener('input',()=>{
+     inp.value=inp.value.replace(/[^a-zA-ZñÑ]/g,'').toUpperCase();
+     if(inp.value) moveNext(inp);
+   });
+
+   inp.addEventListener('keydown',e=>moveArrow(e));
+   d.appendChild(inp);
+   grid.appendChild(d);
+ }
+}
+
+function moveNext(inp){
+ const r=+inp.dataset.row,c=+inp.dataset.col;
+ const all=[...document.querySelectorAll('.cell input')]
+   .filter(x=>+x.dataset.row>r || (+x.dataset.row===r && +x.dataset.col>c));
+ if(all.length) all[0].focus();
+}
+
+function moveArrow(e){
+ const inp=e.target,r=+inp.dataset.row,c=+inp.dataset.col;
+ let nr=r,nc=c;
+ if(e.key==='ArrowUp')nr--;
+ else if(e.key==='ArrowDown')nr++;
+ else if(e.key==='ArrowLeft')nc--;
+ else if(e.key==='ArrowRight')nc++;
+ else return;
+
+ const t=document.querySelector(`input[data-row="${nr}"][data-col="${nc}"]`);
+ if(t){e.preventDefault();t.focus();}
+}
+
+function checkAnswers(){
+ const inputs=[...document.querySelectorAll('.cell input')];
+ let correct=0,total=inputs.length;
+
+ inputs.forEach(i=>{
+   i.parentElement.classList.remove('correct','incorrect');
+   if(i.value.toUpperCase()===i.dataset.answer){
+     correct++;
+     i.parentElement.classList.add('correct');
+   }else{
+     i.parentElement.classList.add('incorrect');
+   }
+ });
+
+ const score=Math.round(correct/total*100)/10;
+ document.getElementById('result').textContent=
+   `Resultado: ${score}/10 — ${correct} de ${total} casillas correctas.`;
+}
+
+function resetGame(){
+ document.querySelectorAll('.cell input').forEach(i=>{
+   i.value='';
+   i.parentElement.classList.remove('correct','incorrect');
+ });
+ document.getElementById('result').textContent='';
+ document.getElementById('name').value='';
+}
+</script>
+</body>
+</html>
+
  if(!cells[k]){d.classList.add('blocked');grid.appendChild(d);continue}
  if(cells[k].nums.length){const n=document.createElement('span');n.className='number';n.textContent=cells[k].nums.join('/');d.appendChild(n)}
  const inp=document.createElement('input');inp.maxLength=1;inp.dataset.row=r;inp.dataset.col=c;inp.dataset.answer=cells[k].letter;inp.setAttribute('aria-label','Casilla '+(r+1)+','+(c+1));
