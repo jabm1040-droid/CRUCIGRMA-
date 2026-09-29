@@ -3,290 +3,1193 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Crucigrama - Procesamiento Profundo</title>
+
 <style>
-*{box-sizing:border-box}
-body{margin:0;padding:20px;font-family:Arial,Helvetica,sans-serif;background:#f3f5f7;color:#222}
-.container{max-width:1000px;margin:auto;background:#fff;padding:24px;border-radius:16px;box-shadow:0 4px 18px rgba(0,0,0,.12)}
-h1{text-align:center;margin-top:0;color:#243447;font-size:clamp(24px,5vw,36px)}
-.intro{line-height:1.6;text-align:center;color:#444}
-.instructions{background:#eef5ff;padding:15px;border-radius:10px;margin:18px 0;line-height:1.55}
-.name-box{margin:18px 0}.name-box label{font-weight:bold;display:block;margin-bottom:7px}.name-box input{width:100%;padding:12px;border:1px solid #bbb;border-radius:8px;font-size:16px}
-.crossword-wrap{overflow-x:auto;padding:15px 5px;margin:10px 0}
-.grid{display:grid;grid-template-columns:repeat(8,38px);grid-auto-rows:38px;gap:2px;width:max-content;margin:auto;background:#222;padding:2px;border-radius:6px}
-.cell{width:38px;height:38px;background:#fff;position:relative;border:1px solid #aaa}
-.cell input{width:100%;height:100%;border:0;background:#fff;color:#111;text-align:center;font-size:21px;font-weight:bold;text-transform:uppercase;outline:none;padding:0}
-.cell input:focus{background:#dff0ff;box-shadow:inset 0 0 0 3px #4b9cff}
-.cell.blocked{background:#222;border-color:#222}
-.number{position:absolute;top:1px;left:2px;font-size:10px;color:#555;z-index:2;pointer-events:none;font-weight:bold}
-.cell.correct input{background:#b9f6c5}.cell.incorrect input{background:#ffb8b8}
-.section-title{margin-top:25px;color:#243447}
-.clues{display:grid;grid-template-columns:1fr 1fr;gap:12px}.clue{padding:12px;background:#f7f7f7;border-radius:8px;border-left:4px solid #4b7bec;line-height:1.45}
-.buttons{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:22px 0}.buttons button{padding:12px 18px;border:0;border-radius:8px;font-size:16px;font-weight:bold;cursor:pointer}.check{background:#287d3c;color:white}.reset{background:#555;color:white}
-#result{text-align:center;font-size:20px;font-weight:bold;min-height:28px}
-@media(max-width:650px){body{padding:10px}.container{padding:15px}.clues{grid-template-columns:1fr}.grid{grid-template-columns:repeat(8,34px);grid-auto-rows:34px}.cell{width:34px;height:34px}.cell input{font-size:19px}}
-</style>
-</head>
-<body>
-<div class="container">
-<h1>🧩 Crucigrama: Procesamiento Profundo</h1>
-<p class="intro">El procesamiento profundo significa comprender, analizar y relacionar la información para lograr un aprendizaje significativo.</p>
-<div class="instructions"><strong>Instrucciones:</strong><br>1. Escribe tu nombre.<br>2. Lee las pistas.<br>3. Completa el crucigrama escribiendo las respuestas <strong>sin tildes</strong>.<br>4. Presiona <strong>Comprobar respuestas</strong> para conocer tu resultado.</div>
-<div class="name-box"><label for="name">Nombre:</label><input id="name" type="text" placeholder="Escribe tu nombre"></div>
-<h2 class="section-title">Crucigrama</h2>
-<div class="crossword-wrap"><div id="grid" class="grid"></div></div>
-<h2 class="section-title">Pistas</h2>
-<div class="clues">
-<div class="clue"><strong>1.</strong> Capacidad de concentrarse en una información o actividad específica.</div>
-<div class="clue"><strong>2.</strong> Proceso de examinar información para comprender sus partes y relaciones.</div>
-<div class="clue"><strong>3.</strong> Proceso de pensar cuidadosamente sobre una experiencia o información.</div>
-<div class="clue"><strong>4.</strong> Proceso mediante el cual una persona adquiere conocimientos y desarrolla habilidades.</div>
-<div class="clue"><strong>5.</strong> Capacidad de almacenar y recuperar información.</div>
-<div class="clue"><strong>6.</strong> Capacidad de entender el significado de una información.</div>
-<div class="clue"><strong>7.</strong> Conjunto de información y saberes adquiridos mediante el estudio o la experiencia.</div>
-</div>
-<div class="buttons"><button class="check" onclick="checkAnswers()">Comprobar respuestas</button><button class="reset" onclick="resetGame()">Reiniciar</button></div>
-<div id="result"></div>
-</div>
-<script>
-const ROWS=21,COLS=8;
-const words=[
- {num:1,word:'ATENCION',row:10,col:0,dir:'H'},
- {num:2,word:'ANALISIS',row:10,col:0,dir:'V'},
- {num:3,word:'REFLEXION',row:9,col:2,dir:'V'},
- {num:4,word:'APRENDIZAJE',row:6,col:3,dir:'V'},
- {num:5,word:'MEMORIA',row:4,col:0,dir:'V'},
- {num:6,word:'COMPRENSION',row:10,col:4,dir:'V'},
- {num:7,word:'CONOCIMIENTO',row:0,col:1,dir:'V'}
-];
-const cells={};
-function key(r,c){return r+'-'+c}
-words.forEach(w=>{for(let i=0;i<w.word.length;i++){let r=w.row+(w.dir==='V'?i:0),c=w.col+(w.dir==='H'?i:0);cells[key(r,c)]={letter:w.word[i],nums:cells[key(r,c)]?.nums||[]};if(!cells[key(r,c)].nums.includes(w.num))cells[key(r,c)].nums.push(w.num)}});
-const grid=document.getElementById('grid');
-for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){
- const d=document.createElement('div');d.className='cell';const k=key(r,c);<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Crucigrama - Procesamiento Profundo</title>
-<style>
-*{box-sizing:border-box}
-body{margin:0;padding:20px;font-family:Arial,Helvetica,sans-serif;background:#f3f5f7;color:#222}
-.container{max-width:1000px;margin:auto;background:#fff;padding:24px;border-radius:16px;box-shadow:0 4px 18px rgba(0,0,0,.12)}
-h1{text-align:center;margin-top:0;color:#243447;font-size:clamp(24px,5vw,36px)}
-.intro{line-height:1.6;text-align:center;color:#444}
-.instructions{background:#eef5ff;padding:15px;border-radius:10px;margin:18px 0;line-height:1.55}
-.name-box{margin:18px 0}.name-box label{font-weight:bold;display:block;margin-bottom:7px}
-.name-box input{width:100%;padding:12px;border:1px solid #bbb;border-radius:8px;font-size:16px}
-.crossword-wrap{overflow-x:auto;padding:15px 5px;margin:10px 0}
-.grid{display:grid;grid-template-columns:repeat(8,42px);grid-auto-rows:42px;gap:2px;width:max-content;margin:auto;background:#222;padding:2px;border-radius:6px}
-.cell{width:42px;height:42px;background:#fff;position:relative;border:1px solid #aaa}
-.cell input{width:100%;height:100%;border:0;background:#fff;color:#111;text-align:center;font-size:22px;font-weight:bold;text-transform:uppercase;outline:none;padding:0}
-.cell input:focus{background:#dff0ff;box-shadow:inset 0 0 0 3px #4b9cff}
-.cell.blocked{background:#222;border-color:#222}
-.number{position:absolute;top:1px;left:3px;font-size:11px;color:#555;z-index:2;pointer-events:none;font-weight:bold}
-.cell.correct input{background:#b9f6c5}
-.cell.incorrect input{background:#ffb8b8}
-.section-title{margin-top:25px;color:#243447}
-.clues{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.clue{padding:12px;background:#f7f7f7;border-radius:8px;border-left:4px solid #4b7bec;line-height:1.45}
-.buttons{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:22px 0}
-.buttons button{padding:12px 18px;border:0;border-radius:8px;font-size:16px;font-weight:bold;cursor:pointer}
-.check{background:#287d3c;color:white}.reset{background:#555;color:white}
-#result{text-align:center;font-size:20px;font-weight:bold;min-height:28px}
-@media(max-width:650px){
- body{padding:10px}.container{padding:15px}.clues{grid-template-columns:1fr}
- .grid{grid-template-columns:repeat(8,34px);grid-auto-rows:34px}
- .cell{width:34px;height:34px}.cell input{font-size:19px}
- .number{font-size:9px}
+
+* {
+  box-sizing: border-box;
 }
+
+body {
+  margin: 0;
+  padding: 20px;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f3f5f7;
+  color: #222;
+}
+
+.contenedor {
+  max-width: 1000px;
+  margin: auto;
+  background: white;
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+}
+
+h1 {
+  text-align: center;
+  margin-top: 0;
+}
+
+.descripcion {
+  line-height: 1.6;
+  text-align: justify;
+}
+
+.instrucciones {
+  background: #eef3f7;
+  padding: 15px;
+  border-radius: 10px;
+  margin: 20px 0;
+}
+
+.nombre-box {
+  margin: 20px 0;
+}
+
+.nombre-box label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+#nombre {
+  width: 100%;
+  max-width: 500px;
+  padding: 12px;
+  border: 1px solid #aaa;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+/* =========================
+   TABLERO
+   ========================= */
+
+.area-crucigrama {
+  width: 100%;
+  overflow-x: auto;
+  padding: 20px 5px;
+}
+
+.tablero {
+  display: grid;
+  gap: 1px;
+  width: max-content;
+  margin: auto;
+  background: #111;
+  border: 2px solid #111;
+}
+
+/* Casillas negras que no pertenecen al crucigrama */
+
+.casilla.negra {
+  background: #111;
+}
+
+/* Casillas donde se escribe */
+
+.casilla.activa {
+  background: white;
+  position: relative;
+}
+
+.casilla.activa input {
+  width: 100%;
+  height: 100%;
+  border: none;
+  outline: none;
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  text-transform: uppercase;
+  background: white;
+  padding: 0;
+}
+
+.casilla.activa input:focus {
+  background: #e7f0ff;
+}
+
+/* Número de la pista */
+
+.numero {
+  position: absolute;
+  top: 1px;
+  left: 2px;
+  font-size: 9px;
+  font-weight: bold;
+  color: #222;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Respuestas */
+
+.correcta input {
+  background: #d9f7df !important;
+}
+
+.incorrecta input {
+  background: #ffdada !important;
+}
+
+/* =========================
+   PISTAS
+   ========================= */
+
+.pistas {
+  margin-top: 25px;
+  line-height: 1.7;
+}
+
+.pistas h2 {
+  margin-bottom: 8px;
+}
+
+.pistas ol {
+  padding-left: 25px;
+}
+
+/* =========================
+   BOTONES
+   ========================= */
+
+.botones {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 25px;
+}
+
+button {
+  border: none;
+  border-radius: 8px;
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#btnComprobar {
+  background: #2563eb;
+  color: white;
+}
+
+#btnReiniciar {
+  background: #555;
+  color: white;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+#resultado {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.nota {
+  text-align: center;
+  margin-top: 15px;
+  color: #666;
+  font-size: 14px;
+}
+
+/* =========================
+   CELULAR
+   ========================= */
+
+@media (max-width: 600px) {
+
+  body {
+    padding: 10px;
+  }
+
+  .contenedor {
+    padding: 15px;
+  }
+
+  .casilla.activa,
+  .casilla.negra {
+    width: 29px;
+    height: 29px;
+  }
+
+  .casilla.activa input {
+    font-size: 16px;
+  }
+
+  .numero {
+    font-size: 8px;
+  }
+}
+
 </style>
 </head>
+
+
 <body>
-<div class="container">
-<h1>🧩 Crucigrama: Procesamiento Profundo</h1>
-<p class="intro">El procesamiento profundo significa comprender, analizar y relacionar la información para lograr un aprendizaje significativo.</p>
 
-<div class="instructions">
-<strong>Instrucciones:</strong><br>
-1. Escribe tu nombre.<br>
-2. Lee las pistas.<br>
-3. Completa el crucigrama escribiendo las respuestas <strong>sin tildes</strong>.<br>
-4. Presiona <strong>Comprobar respuestas</strong> para conocer tu resultado.
+<div class="contenedor">
+
+  <h1>🧩 Crucigrama: Procesamiento Profundo</h1>
+
+  <div class="descripcion">
+
+    <p>
+      El procesamiento profundo es una forma de aprendizaje que implica
+      comprender, relacionar, analizar y reflexionar sobre la información,
+      en lugar de simplemente memorizarla.
+    </p>
+
+    <p>
+      Este crucigrama permite reforzar conceptos relacionados con la
+      atención, memoria, comprensión, análisis, reflexión y aprendizaje.
+    </p>
+
+  </div>
+
+
+  <div class="instrucciones">
+
+    <strong>Instrucciones:</strong>
+
+    <ol>
+      <li>Lee cuidadosamente cada pista.</li>
+      <li>Escribe una letra en cada casilla blanca.</li>
+      <li>Las respuestas se escriben sin tildes.</li>
+      <li>Cuando termines, presiona <strong>“Comprobar respuestas”</strong>.</li>
+      <li>Las casillas verdes son correctas y las rojas contienen errores.</li>
+    </ol>
+
+  </div>
+
+
+  <div class="nombre-box">
+
+    <label for="nombre">
+      Nombre del estudiante:
+    </label>
+
+    <input
+      type="text"
+      id="nombre"
+      placeholder="Escribe tu nombre completo"
+      autocomplete="name"
+    >
+
+  </div>
+
+
+  <!-- CRUCIGRAMA -->
+
+  <div class="area-crucigrama">
+
+    <div id="tablero" class="tablero"></div>
+
+  </div>
+
+
+  <!-- PISTAS -->
+
+  <div class="pistas">
+
+    <h2>➡️ Horizontales</h2>
+
+    <ol>
+
+      <li value="1">
+        Capacidad de concentrarse en una información o actividad específica.
+      </li>
+
+      <li value="2">
+        Proceso de examinar información para comprender sus partes y relaciones.
+      </li>
+
+      <li value="3">
+        Proceso de pensar cuidadosamente sobre una experiencia o información.
+      </li>
+
+      <li value="4">
+        Proceso mediante el cual una persona adquiere conocimientos y desarrolla habilidades.
+      </li>
+
+    </ol>
+
+
+    <h2>⬇️ Verticales</h2>
+
+    <ol>
+
+      <li value="5">
+        Capacidad de almacenar y recuperar información.
+      </li>
+
+      <li value="6">
+        Capacidad de entender el significado de una información.
+      </li>
+
+      <li value="7">
+        Conjunto de información y saberes adquiridos mediante el estudio o la experiencia.
+      </li>
+
+    </ol>
+
+  </div>
+
+
+  <!-- BOTONES -->
+
+  <div class="botones">
+
+    <button
+      id="btnComprobar"
+      onclick="comprobar()">
+      ✅ Comprobar respuestas
+    </button>
+
+    <button
+      id="btnReiniciar"
+      onclick="reiniciar()">
+      🔄 Reiniciar
+    </button>
+
+  </div>
+
+
+  <div id="resultado"></div>
+
+
+  <div class="nota">
+
+    <strong>Objetivo:</strong>
+    reforzar los conceptos relacionados con el procesamiento profundo.
+
+  </div>
+
 </div>
 
-<div class="name-box">
-<label for="name">Nombre:</label>
-<input id="name" type="text" placeholder="Escribe tu nombre">
-</div>
-
-<h2 class="section-title">Crucigrama</h2>
-<div class="crossword-wrap"><div id="grid" class="grid"></div></div>
-
-<h2 class="section-title">Pistas</h2>
-<div class="clues">
-<div class="clue"><strong>1. ATENCION</strong><br>Capacidad de concentrarse en una información o actividad específica.</div>
-<div class="clue"><strong>2. ANALISIS</strong><br>Proceso de examinar información para comprender sus partes y relaciones.</div>
-<div class="clue"><strong>3. REFLEXION</strong><br>Proceso de pensar cuidadosamente sobre una experiencia o información.</div>
-<div class="clue"><strong>4. APRENDIZAJE</strong><br>Proceso mediante el cual una persona adquiere conocimientos y desarrolla habilidades.</div>
-<div class="clue"><strong>5. MEMORIA</strong><br>Capacidad de almacenar y recuperar información.</div>
-<div class="clue"><strong>6. COMPRENSION</strong><br>Capacidad de entender el significado de una información.</div>
-<div class="clue"><strong>7. CONOCIMIENTO</strong><br>Conjunto de información y saberes adquiridos mediante el estudio o la experiencia.</div>
-</div>
-
-<div class="buttons">
-<button class="check" onclick="checkAnswers()">Comprobar respuestas</button>
-<button class="reset" onclick="resetGame()">Reiniciar</button>
-</div>
-<div id="result"></div>
-</div>
 
 <script>
-const ROWS=21, COLS=8;
 
-/*
-  Distribución corregida:
-  1 ATENCION       horizontal, fila 10
-  2 ANALISIS       vertical, columna 0
-  3 REFLEXION      vertical, columna 2
-  4 APRENDIZAJE    vertical, columna 3
-  5 MEMORIA        vertical, columna 6
-  6 COMPRENSION    vertical, columna 4
-  7 CONOCIMIENTO   vertical, columna 1
-*/
-const words=[
- {num:1,word:'ATENCION',row:10,col:0,dir:'H'},
- {num:2,word:'ANALISIS',row:10,col:0,dir:'V'},
- {num:3,word:'REFLEXION',row:9,col:2,dir:'V'},
- {num:4,word:'APRENDIZAJE',row:6,col:3,dir:'V'},
- {num:5,word:'MEMORIA',row:7,col:6,dir:'V'},
- {num:6,word:'COMPRENSION',row:10,col:4,dir:'V'},
- {num:7,word:'CONOCIMIENTO',row:0,col:1,dir:'V'}
+/* ==================================================
+   CONFIGURACIÓN DEL TABLERO
+   ================================================== */
+
+const FILAS = 21;
+const COLUMNAS = 21;
+
+
+/* ==================================================
+   PALABRAS
+   ================================================== */
+
+const palabras = [
+
+  {
+    numero: 1,
+    palabra: "ATENCION",
+    fila: 10,
+    columna: 5,
+    direccion: "H"
+  },
+
+  {
+    numero: 5,
+    palabra: "MEMORIA",
+    fila: 9,
+    columna: 7,
+    direccion: "V"
+  },
+
+  {
+    numero: 6,
+    palabra: "COMPRENSION",
+    fila: 10,
+    columna: 9,
+    direccion: "V"
+  },
+
+  {
+    numero: 3,
+    palabra: "REFLEXION",
+    fila: 14,
+    columna: 9,
+    direccion: "H"
+  },
+
+  {
+    numero: 2,
+    palabra: "ANALISIS",
+    fila: 10,
+    columna: 5,
+    direccion: "V"
+  },
+
+  {
+    numero: 4,
+    palabra: "APRENDIZAJE",
+    fila: 13,
+    columna: 8,
+    direccion: "H"
+  },
+
+  {
+    numero: 7,
+    palabra: "CONOCIMIENTO",
+    fila: 11,
+    columna: 8,
+    direccion: "H"
+  }
+
 ];
 
-const cells={};
-function key(r,c){return r+'-'+c}
 
-words.forEach(w=>{
- for(let i=0;i<w.word.length;i++){
-   const r=w.row+(w.dir==='V'?i:0);
-   const c=w.col+(w.dir==='H'?i:0);
-   if(r<0||r>=ROWS||c<0||c>=COLS) continue;
-   const k=key(r,c);
-   if(!cells[k]) cells[k]={letter:w.word[i],nums:[]};
-   if(cells[k].letter!==w.word[i]){
-     console.error('Cruce incorrecto en',k,w.num);
-   }
-   if(!cells[k].nums.includes(w.num)) cells[k].nums.push(w.num);
- }
+/* ==================================================
+   CREAR TABLERO LÓGICO
+   ================================================== */
+
+const tablero =
+  Array.from(
+    { length: FILAS },
+    () => Array(COLUMNAS).fill(null)
+  );
+
+
+/* ==================================================
+   COLOCAR LAS PALABRAS
+   ================================================== */
+
+palabras.forEach(p => {
+
+  for (
+    let i = 0;
+    i < p.palabra.length;
+    i++
+  ) {
+
+    const fila =
+      p.fila +
+      (p.direccion === "V" ? i : 0);
+
+    const columna =
+      p.columna +
+      (p.direccion === "H" ? i : 0);
+
+    const letra =
+      p.palabra[i];
+
+
+    /* Comprobar que la posición sea válida */
+
+    if (
+      fila < 0 ||
+      fila >= FILAS ||
+      columna < 0 ||
+      columna >= COLUMNAS
+    ) {
+
+      console.error(
+        "Palabra fuera del tablero:",
+        p.palabra
+      );
+
+      return;
+    }
+
+
+    /* Si está vacía */
+
+    if (tablero[fila][columna] === null) {
+
+      tablero[fila][columna] = {
+
+        letra: letra,
+
+        numeros: [p.numero]
+
+      };
+
+    }
+
+    /* Si ya existe una letra */
+
+    else {
+
+      /* Comprobar que las letras coincidan */
+
+      if (
+        tablero[fila][columna].letra !== letra
+      ) {
+
+        console.error(
+          "ERROR DE CRUCE:",
+          p.palabra,
+          "en",
+          fila,
+          columna
+        );
+
+      }
+
+
+      /* Guardar también el número */
+
+      if (
+        !tablero[fila][columna].numeros.includes(
+          p.numero
+        )
+      ) {
+
+        tablero[fila][columna].numeros.push(
+          p.numero
+        );
+
+      }
+
+    }
+
+  }
+
 });
 
-const grid=document.getElementById('grid');
 
-for(let r=0;r<ROWS;r++){
- for(let c=0;c<COLS;c++){
-   const d=document.createElement('div');
-   d.className='cell';
-   const k=key(r,c);
+/* ==================================================
+   ENCONTRAR LOS LÍMITES REALES
+   ================================================== */
 
-   if(!cells[k]){
-     d.classList.add('blocked');
-     grid.appendChild(d);
-     continue;
-   }
+let minFila = FILAS;
+let maxFila = -1;
 
-   // Solo muestra el número de inicio de cada palabra.
-   const startNums=words
-     .filter(w=>w.row===r && w.col===c)
-     .map(w=>w.num);
+let minColumna = COLUMNAS;
+let maxColumna = -1;
 
-   if(startNums.length){
-     const n=document.createElement('span');
-     n.className='number';
-     n.textContent=startNums.join('/');
-     d.appendChild(n);
-   }
 
-   const inp=document.createElement('input');
-   inp.maxLength=1;
-   inp.dataset.row=r;
-   inp.dataset.col=c;
-   inp.dataset.answer=cells[k].letter;
-   inp.setAttribute('aria-label','Casilla '+(r+1)+','+(c+1));
+for (
+  let fila = 0;
+  fila < FILAS;
+  fila++
+) {
 
-   inp.addEventListener('input',()=>{
-     inp.value=inp.value.replace(/[^a-zA-ZñÑ]/g,'').toUpperCase();
-     if(inp.value) moveNext(inp);
-   });
+  for (
+    let columna = 0;
+    columna < COLUMNAS;
+    columna++
+  ) {
 
-   inp.addEventListener('keydown',e=>moveArrow(e));
-   d.appendChild(inp);
-   grid.appendChild(d);
- }
+    if (tablero[fila][columna] !== null) {
+
+      minFila =
+        Math.min(minFila, fila);
+
+      maxFila =
+        Math.max(maxFila, fila);
+
+      minColumna =
+        Math.min(minColumna, columna);
+
+      maxColumna =
+        Math.max(maxColumna, columna);
+
+    }
+
+  }
+
 }
 
-function moveNext(inp){
- const r=+inp.dataset.row,c=+inp.dataset.col;
- const all=[...document.querySelectorAll('.cell input')]
-   .filter(x=>+x.dataset.row>r || (+x.dataset.row===r && +x.dataset.col>c));
- if(all.length) all[0].focus();
+
+/* ==================================================
+   CREAR TABLERO VISUAL
+   ================================================== */
+
+function crearTablero() {
+
+  const contenedor =
+    document.getElementById("tablero");
+
+
+  contenedor.innerHTML = "";
+
+
+  /*
+    Calculamos únicamente el área utilizada.
+
+    Resultado:
+    12 filas × 15 columnas
+  */
+
+  const filasVisibles =
+    maxFila - minFila + 1;
+
+  const columnasVisibles =
+    maxColumna - minColumna + 1;
+
+
+  contenedor.style.gridTemplateColumns =
+    `repeat(${columnasVisibles}, 34px)`;
+
+
+  contenedor.style.gridTemplateRows =
+    `repeat(${filasVisibles}, 34px)`;
+
+
+  /* Crear cada casilla */
+
+  for (
+    let fila = minFila;
+    fila <= maxFila;
+    fila++
+  ) {
+
+    for (
+      let columna = minColumna;
+      columna <= maxColumna;
+      columna++
+    ) {
+
+      const informacion =
+        tablero[fila][columna];
+
+
+      const casilla =
+        document.createElement("div");
+
+
+      /*
+        Si no hay palabra en esa posición,
+        se crea una casilla negra.
+      */
+
+      if (informacion === null) {
+
+        casilla.className =
+          "casilla negra";
+
+        contenedor.appendChild(
+          casilla
+        );
+
+        continue;
+
+      }
+
+
+      /* Casilla activa */
+
+      casilla.className =
+        "casilla activa";
+
+
+      /* Número de la pista */
+
+      if (
+        informacion.numeros.length > 0
+      ) {
+
+        const numero =
+          document.createElement("span");
+
+
+        numero.className =
+          "numero";
+
+
+        numero.textContent =
+          informacion.numeros.join(",");
+
+
+        casilla.appendChild(
+          numero
+        );
+
+      }
+
+
+      /* Campo para escribir */
+
+      const input =
+        document.createElement("input");
+
+
+      input.type = "text";
+
+      input.maxLength = 1;
+
+      input.autocomplete = "off";
+
+
+      input.dataset.fila =
+        fila;
+
+      input.dataset.columna =
+        columna;
+
+
+      input.setAttribute(
+        "aria-label",
+        `Fila ${fila + 1}, columna ${columna + 1}`
+      );
+
+
+      /* Escribir letra */
+
+      input.addEventListener(
+        "input",
+        function() {
+
+          this.value =
+            this.value
+              .toUpperCase()
+              .replace(/[^A-ZÑ]/g, "")
+              .slice(0, 1);
+
+
+          this.parentElement.classList.remove(
+            "correcta",
+            "incorrecta"
+          );
+
+
+          if (this.value !== "") {
+
+            moverSiguiente(this);
+
+          }
+
+        }
+      );
+
+
+      /* Flechas del teclado */
+
+      input.addEventListener(
+        "keydown",
+        function(event) {
+
+          const f =
+            Number(
+              this.dataset.fila
+            );
+
+          const c =
+            Number(
+              this.dataset.columna
+            );
+
+
+          let nuevaFila = f;
+
+          let nuevaColumna = c;
+
+
+          if (
+            event.key === "ArrowUp"
+          ) {
+
+            nuevaFila--;
+
+          }
+
+
+          if (
+            event.key === "ArrowDown"
+          ) {
+
+            nuevaFila++;
+
+          }
+
+
+          if (
+            event.key === "ArrowLeft"
+          ) {
+
+            nuevaColumna--;
+
+          }
+
+
+          if (
+            event.key === "ArrowRight"
+          ) {
+
+            nuevaColumna++;
+
+          }
+
+
+          if (
+            nuevaFila !== f ||
+            nuevaColumna !== c
+          ) {
+
+            event.preventDefault();
+
+
+            enfocarCasilla(
+              nuevaFila,
+              nuevaColumna
+            );
+
+          }
+
+        }
+      );
+
+
+      casilla.appendChild(
+        input
+      );
+
+
+      contenedor.appendChild(
+        casilla
+      );
+
+    }
+
+  }
+
 }
 
-function moveArrow(e){
- const inp=e.target,r=+inp.dataset.row,c=+inp.dataset.col;
- let nr=r,nc=c;
- if(e.key==='ArrowUp')nr--;
- else if(e.key==='ArrowDown')nr++;
- else if(e.key==='ArrowLeft')nc--;
- else if(e.key==='ArrowRight')nc++;
- else return;
 
- const t=document.querySelector(`input[data-row="${nr}"][data-col="${nc}"]`);
- if(t){e.preventDefault();t.focus();}
+/* ==================================================
+   MOVER A LA SIGUIENTE CASILLA
+   ================================================== */
+
+function moverSiguiente(inputActual) {
+
+  const fila =
+    Number(
+      inputActual.dataset.fila
+    );
+
+  const columna =
+    Number(
+      inputActual.dataset.columna
+    );
+
+
+  /* Primero busca hacia la derecha */
+
+  for (
+    let c = columna + 1;
+    c <= maxColumna;
+    c++
+  ) {
+
+    if (
+      tablero[fila][c] !== null
+    ) {
+
+      enfocarCasilla(
+        fila,
+        c
+      );
+
+      return;
+
+    }
+
+  }
+
+
+  /* Después busca en las siguientes filas */
+
+  for (
+    let f = fila + 1;
+    f <= maxFila;
+    f++
+  ) {
+
+    for (
+      let c = minColumna;
+      c <= maxColumna;
+      c++
+    ) {
+
+      if (
+        tablero[f][c] !== null
+      ) {
+
+        enfocarCasilla(
+          f,
+          c
+        );
+
+        return;
+
+      }
+
+    }
+
+  }
+
 }
 
-function checkAnswers(){
- const inputs=[...document.querySelectorAll('.cell input')];
- let correct=0,total=inputs.length;
 
- inputs.forEach(i=>{
-   i.parentElement.classList.remove('correct','incorrect');
-   if(i.value.toUpperCase()===i.dataset.answer){
-     correct++;
-     i.parentElement.classList.add('correct');
-   }else{
-     i.parentElement.classList.add('incorrect');
-   }
- });
+/* ==================================================
+   ENFOCAR UNA CASILLA
+   ================================================== */
 
- const score=Math.round(correct/total*100)/10;
- document.getElementById('result').textContent=
-   `Resultado: ${score}/10 — ${correct} de ${total} casillas correctas.`;
+function enfocarCasilla(
+  fila,
+  columna
+) {
+
+  if (
+    fila < minFila ||
+    fila > maxFila ||
+    columna < minColumna ||
+    columna > maxColumna
+  ) {
+
+    return;
+
+  }
+
+
+  const input =
+    document.querySelector(
+      `input[data-fila="${fila}"][data-columna="${columna}"]`
+    );
+
+
+  if (input) {
+
+    input.focus();
+
+    input.select();
+
+  }
+
 }
 
-function resetGame(){
- document.querySelectorAll('.cell input').forEach(i=>{
-   i.value='';
-   i.parentElement.classList.remove('correct','incorrect');
- });
- document.getElementById('result').textContent='';
- document.getElementById('name').value='';
+
+/* ==================================================
+   NORMALIZAR RESPUESTAS
+   ================================================== */
+
+function normalizar(texto) {
+
+  return texto
+    .normalize("NFD")
+    .replace(
+      /[\u0300-\u036f]/g,
+      ""
+    )
+    .toUpperCase()
+    .trim();
+
 }
+
+
+/* ==================================================
+   COMPROBAR RESPUESTAS
+   ================================================== */
+
+function comprobar() {
+
+  const nombre =
+    document
+      .getElementById("nombre")
+      .value
+      .trim();
+
+
+  const resultado =
+    document.getElementById(
+      "resultado"
+    );
+
+
+  if (!nombre) {
+
+    resultado.innerHTML =
+      "⚠️ Primero escribe tu nombre.";
+
+    document
+      .getElementById("nombre")
+      .focus();
+
+    return;
+
+  }
+
+
+  let total = 0;
+
+  let correctas = 0;
+
+
+  /*
+    Se revisa cada casilla una sola vez.
+    Por eso los cruces no se cuentan dos veces.
+  */
+
+  for (
+    let fila = minFila;
+    fila <= maxFila;
+    fila++
+  ) {
+
+    for (
+      let columna = minColumna;
+      columna <= maxColumna;
+      columna++
+    ) {
+
+      if (
+        tablero[fila][columna] === null
+      ) {
+
+        continue;
+
+      }
+
+
+      const input =
+        document.querySelector(
+          `input[data-fila="${fila}"][data-columna="${columna}"]`
+        );
+
+
+      if (!input) {
+
+        continue;
+
+      }
+
+
+      total++;
+
+
+      const respuesta =
+        normalizar(
+          input.value
+        );
+
+
+      const correcta =
+        tablero[fila][columna].letra;
+
+
+      if (
+        respuesta === correcta
+      ) {
+
+        correctas++;
+
+
+        input.parentElement.classList.add(
+          "correcta"
+        );
+
+
+        input.parentElement.classList.remove(
+          "incorrecta"
+        );
+
+      }
+
+      else {
+
+        input.parentElement.classList.add(
+          "incorrecta"
+        );
+
+
+        input.parentElement.classList.remove(
+          "correcta"
+        );
+
+      }
+
+    }
+
+  }
+
+
+  const nota =
+    total > 0
+      ? (correctas / total) * 10
+      : 0;
+
+
+  resultado.innerHTML = `
+
+    Resultado:
+    <strong>
+      ${correctas} de ${total}
+    </strong>
+    correctas.
+
+    <br>
+
+    Puntaje:
+    <strong>
+      ${nota.toFixed(2)}/10
+    </strong>
+
+  `;
+
+}
+
+
+/* ==================================================
+   REINICIAR
+   ================================================== */
+
+function reiniciar() {
+
+  const inputs =
+    document.querySelectorAll(
+      ".casilla.activa input"
+    );
+
+
+  inputs.forEach(
+    input => {
+
+      input.value = "";
+
+
+      input.parentElement.classList.remove(
+        "correcta",
+        "incorrecta"
+      );
+
+    }
+  );
+
+
+  document.getElementById(
+    "resultado"
+  ).innerHTML = "";
+
+
+  document.getElementById(
+    "nombre"
+  ).value = "";
+
+}
+
+
+/* ==================================================
+   INICIAR
+   ================================================== */
+
+crearTablero();
+
 </script>
-</body>
-</html>
 
- if(!cells[k]){d.classList.add('blocked');grid.appendChild(d);continue}
- if(cells[k].nums.length){const n=document.createElement('span');n.className='number';n.textContent=cells[k].nums.join('/');d.appendChild(n)}
- const inp=document.createElement('input');inp.maxLength=1;inp.dataset.row=r;inp.dataset.col=c;inp.dataset.answer=cells[k].letter;inp.setAttribute('aria-label','Casilla '+(r+1)+','+(c+1));
- inp.addEventListener('input',()=>{inp.value=inp.value.replace(/[^a-zA-ZñÑ]/g,'').toUpperCase();if(inp.value)moveNext(inp)});
- inp.addEventListener('keydown',e=>moveArrow(e));d.appendChild(inp);grid.appendChild(d);
-}
-function moveNext(inp){const r=+inp.dataset.row,c=+inp.dataset.col;const all=[...document.querySelectorAll('.cell input')].filter(x=>+x.dataset.row>r||(+x.dataset.row===r&&+x.dataset.col>c));if(all.length)all[0].focus()}
-function moveArrow(e){const inp=e.target,r=+inp.dataset.row,c=+inp.dataset.col;let nr=r,nc=c;if(e.key==='ArrowUp')nr--;else if(e.key==='ArrowDown')nr++;else if(e.key==='ArrowLeft')nc--;else if(e.key==='ArrowRight')nc++;else return;const t=document.querySelector(`input[data-row="${nr}"][data-col="${nc}"]`);if(t){e.preventDefault();t.focus()}}
-function checkAnswers(){let inputs=[...document.querySelectorAll('.cell input')],correct=0,total=inputs.length;inputs.forEach(i=>{i.parentElement.classList.remove('correct','incorrect');if(i.value.toUpperCase()===i.dataset.answer){correct++;i.parentElement.classList.add('correct')}else{i.parentElement.classList.add('incorrect')}});let score=Math.round(correct/total*10*10)/10;document.getElementById('result').textContent=`Resultado: ${score}/10 — ${correct} de ${total} casillas correctas.`}
-function resetGame(){document.querySelectorAll('.cell input').forEach(i=>{i.value='';i.parentElement.classList.remove('correct','incorrect')});document.getElementById('result').textContent='';document.getElementById('name').value=''}
-</script>
 </body>
 </html>
